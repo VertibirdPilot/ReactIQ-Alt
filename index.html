@@ -3,57 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REACTIQ</title>
+    <title>Home - ReactIQ</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-gradient {
+            background-image: linear-gradient(to right, #38bdf8 0%, #818cf8 51%, #38bdf8 100%);
+            background-size: 200% auto;
+        }
+        .btn-gradient:hover {
+            background-position: right center;
         }
         .hidden { display: none; }
-        .card-shadow { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
         .animate-fade-in { animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="text-gray-800">
+<body class="bg-slate-900 text-gray-200">
 
-    <div id="app" class="container mx-auto max-w-lg p-4 min-h-screen flex flex-col items-center justify-center">
-
-  
-        <div id="loading" class="hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-25 flex items-center justify-center z-50">
-            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600"></div>
-        </div>
-
-
-        <div class="w-full bg-white p-8 rounded-2xl card-shadow">
-            <div class="flex items-center gap-4 mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-800"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                <h1 class="text-3xl font-bold text-gray-800">React IQ</h1>
+    <header class="bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50 shadow-lg shadow-cyan-500/5">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div id="branding">
+                <h1 class="text-2xl md:text-3xl font-black"><span class="gradient-text">React</span>IQ</h1>
             </div>
-            
-            <form id="search-form" class="flex mb-6 shadow-sm rounded-lg">
-                <input type="text" id="search-input" placeholder="Search for a keyword..." class="flex-grow px-4 py-3 border-gray-200 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow">
-                <button type="submit" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-6 rounded-r-lg transition duration-300 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <nav>
+                <ul class="flex space-x-4 md:space-x-6 items-center">
+                    <li><a href="#" class="font-bold text-sky-400 border-b-2 border-sky-400 pb-1">Home</a></li>
+                    <li><a href="#" class="font-semibold hover:text-sky-300 transition-colors duration-300">Result</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="showcase" class="relative text-center overflow-hidden">
+        <div class="absolute inset-0 bg-slate-900 z-10 opacity-80"></div>
+        <div class="absolute -inset-0 z-0 opacity-20">
+             <div class="absolute inset-0 bg-[url('https://tailwindcss.com/_next/static/media/hero-dark@90.dba36cdf.jpg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+        </div>
+        <div class="container relative mx-auto px-6 py-28 md:py-36 z-20">
+            <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight text-white tracking-tighter">
+                Analyze X Posts Instantly.
+            </h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto text-gray-300">
+                Using AI to predict post sentiment Positive, Negative, or Neutral to understand market trends.
+            </p>
+        </div>
+    </section>
+    
+    <!-- Loading Spinner -->
+    <div id="loading" class="hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-sky-400"></div>
+    </div>
+
+
+    <section id="pred" class="py-20 bg-slate-800/50">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-3xl font-bold mb-2">Enter a Topic</h1>
+            <p class="mb-8 text-gray-400">What do you want to analyze on X?</p>
+            <form id="search-form" class="max-w-xl mx-auto">
+                <textarea id="search-input" name="Tweet" placeholder="e.g., #ElectricVehicles, @Google, the new iPhone..." rows="4" class="w-full bg-slate-800 text-white placeholder-gray-500 p-4 border border-slate-700 rounded-lg shadow-sm focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition duration-300 resize-none"></textarea>
+                <button type="submit" class="mt-6 text-white font-bold py-3 px-10 rounded-lg transform hover:scale-105 transition duration-300 ease-in-out shadow-lg shadow-sky-500/20 btn-gradient">
+                    Analyze Now
                 </button>
             </form>
 
-            <div id="result-container" class="hidden">
-                <h3 class="text-xl font-semibold text-gray-700 mb-2 border-b pb-2">Results</h3>
-
-                <div id="posts-container" class="space-y-4 mt-4 max-h-[60vh] overflow-y-auto pr-2">
-
+            <!-- NEW: This is where the results will be displayed -->
+            <div id="result-container" class="hidden mt-16 max-w-3xl mx-auto text-left">
+                <h2 class="text-3xl font-bold mb-6 text-white border-b border-slate-700 pb-3">Analysis Results</h2>
+                <div id="posts-container" class="space-y-6">
+                    <!-- Post cards will be dynamically inserted here -->
                 </div>
-
-                <p id="no-result-message" class="text-gray-500 pt-4"></p>
+                <p id="no-result-message" class="text-slate-400 text-center mt-8"></p>
             </div>
-             <p id="initial-message" class="text-gray-500 pt-4">Search for a keyword</p>
         </div>
-        <p class="text-center text-sm text-gray-500 mt-6">Sentiment Analysis Model Test</p>
-    </div>
+    </section>
 
+    <section id="boxes" class="py-24 bg-slate-900">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-slate-800/80 p-8 rounded-xl shadow-lg border border-slate-700 hover:border-sky-500 hover:shadow-sky-500/10 transition-all duration-300 flex flex-col">
+                    <div class="flex-shrink-0 mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></div>
+                    <h2 class="text-2xl font-bold mb-3 text-white">The Code</h2>
+                    <p class="text-gray-400 mb-6 flex-grow">Explore the Python machine learning model that powers this sentiment analysis tool.</p>
+                    <a href="https://github.com/VertibirdPilot/ReactIQ" target="_blank" class="mt-auto font-semibold text-sky-400 hover:text-sky-300 transition-colors">
+                        View on GitHub &rarr;
+                    </a>
+                </div>
+                <div class="bg-slate-800/80 p-8 rounded-xl shadow-lg border border-slate-700 hover:border-sky-500 hover:shadow-sky-500/10 transition-all duration-300 flex flex-col">
+                    <div class="flex-shrink-0 mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+                    <h2 class="text-2xl font-bold mb-3 text-white">How It Works</h2>
+                    <p class="text-gray-400 mb-6 flex-grow">This app gauges public opinion to determine if X is the right place for your advertising campaign.</p>
+                </div>
+                <div class="bg-slate-800/80 p-8 rounded-xl shadow-lg border border-slate-700 hover:border-sky-500 hover:shadow-sky-500/10 transition-all duration-300 flex flex-col">
+                    <div class="flex-shrink-0 mb-4"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sky-400"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                    <h2 class="text-2xl font-bold mb-3 text-white">Project By</h2>
+                    <p class="text-gray-400 mb-6 flex-grow">A group project for CSE3203.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-900 border-t border-slate-800 text-center p-6">
+        <p class="text-slate-500">ReactIQ Project</p>
+    </footer>
+    
     <script src="script.js" defer></script>
 </body>
 </html>
+
+
