@@ -42,14 +42,16 @@ const showNoResults = () => {
 async function fetchPostsFromBackend(keyword) {
     showLoading(true);
     try {
-        const response = await fetch(`/api/search-tweets?keyword=${encodeURIComponent(keyword)}`);
+        // UPDATED: The URL now points to the Vercel function at /api/index
+        const response = await fetch(`/api/index?keyword=${encodeURIComponent(keyword)}`);
+        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         return await response.json();
     } catch (error) {
-        console.error("Could not fetch posts. Is your local server running?", error);
-        alert("Could not fetch posts. Make sure your local server is running and check the console for errors.");
+        console.error("Could not fetch posts.", error);
+        alert("Could not fetch posts. Check the Vercel logs for errors.");
         return [];
     } finally {
         showLoading(false);
@@ -70,5 +72,6 @@ searchForm.addEventListener('submit', async (e) => {
     } else {
         showNoResults();
     }
-    // We don't clear the input in this design
 });
+
+
