@@ -1,26 +1,16 @@
-const express = require('express');
 const axios = require('axios');
-const path = require('path');
-require('dotenv').config();
 
-const app = express();
+// This is a standard Vercel Serverless Function. No Express app needed.
+module.exports = async (req, res) => {
+    // Get the keyword from the query parameters (e.g., /api/index?keyword=react)
+    const { keyword } = req.query;
 
-// IMPORTANT: No port constant or app.listen() needed for Vercel
-
-// Serve static files for requests that are not for the API
-// This points to the public files in the root directory, one level up from /api
-app.use(express.static(path.join(__dirname, '..')));
-
-// API endpoint for searching posts
-app.get('/api/search-tweets', async (req, res) => {
-    const keyword = req.query.keyword;
     if (!keyword) {
         return res.status(400).json({ error: 'Keyword is required' });
     }
 
-    // On Vercel, environment variables are set in the project settings
     if (!process.env.X_BEARER_TOKEN) {
-        return res.status(500).json({ error: 'Server environment variable not set.' });
+        return res.status(500).json({ error: 'Server environment variable X_BEARER_TOKEN not set.' });
     }
 
     const twitterURL = `https://api.twitter.com/2/tweets/search/recent?query=${encodeURIComponent(keyword)} lang:en -is:retweet&tweet.fields=created_at&expansions=author_id&max_results=10`;
@@ -33,7 +23,7 @@ app.get('/api/search-tweets', async (req, res) => {
         });
 
         if (response.data.meta.result_count === 0) {
-            return res.json([]);
+            return res.status(200).json([]);
         }
 
         const tweets = response.data.data;
@@ -46,13 +36,11 @@ app.get('/api/search-tweets', async (req, res) => {
             user: userMap.get(tweet.author_id) || 'Unknown'
         }));
         
-        res.json(formattedTweets);
+        // Vercel handles CORS and headers for you in most cases
+        res.status(200).json(formattedTweets);
 
     } catch (error) {
         console.error('Error fetching posts from X API:', error.response ? error.response.data : error.message);
         res.status(500).json({ error: 'Failed to fetch posts from X API', details: error.response ? error.response.data : {} });
     }
-});
-
-// Export the app for Vercel to use
-module.exports = app;
+};
