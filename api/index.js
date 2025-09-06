@@ -4,32 +4,28 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
-const port = 3001;
 
+// IMPORTANT: No port constant or app.listen() needed for Vercel
 
-app.use((req, res, next) => {
-    console.log(`Request received: ${req.method} ${req.url}`);
-    next();
-});
+// Serve static files for requests that are not for the API
+// This points to the public files in the root directory, one level up from /api
+app.use(express.static(path.join(__dirname, '..')));
 
-
-app.use(express.static(__dirname));
-
-
+// API endpoint for searching posts
 app.get('/api/search-tweets', async (req, res) => {
     const keyword = req.query.keyword;
     if (!keyword) {
         return res.status(400).json({ error: 'Keyword is required' });
     }
 
+    // On Vercel, environment variables are set in the project settings
     if (!process.env.X_BEARER_TOKEN) {
-        return res.status(500).json({ error: 'X_BEARER_TOKEN is not set in .env file' });
+        return res.status(500).json({ error: 'Server environment variable not set.' });
     }
 
     const twitterURL = `https://api.twitter.com/2/tweets/search/recent?query=${encodeURIComponent(keyword)} lang:en -is:retweet&tweet.fields=created_at&expansions=author_id&max_results=10`;
 
     try {
-        console.log(`Fetching posts for keyword: ${keyword}`);
         const response = await axios.get(twitterURL, {
             headers: {
                 'Authorization': `Bearer ${process.env.X_BEARER_TOKEN}`
@@ -50,7 +46,6 @@ app.get('/api/search-tweets', async (req, res) => {
             user: userMap.get(tweet.author_id) || 'Unknown'
         }));
         
- 
         res.json(formattedTweets);
 
     } catch (error) {
@@ -59,8 +54,5 @@ app.get('/api/search-tweets', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-    console.log('Make sure your .env file is created and contains your X_BEARER_TOKEN.');
-    console.log('Open http://localhost:3001 in your browser to use the app.');
-});
+// Export the app for Vercel to use
+module.exports = app;
